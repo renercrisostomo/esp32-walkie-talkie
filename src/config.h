@@ -1,13 +1,46 @@
+#pragma once
+
 #include <freertos/FreeRTOS.h>
 #include <driver/i2s.h>
 #include <driver/gpio.h>
+#include "../data/credentials.h"
 
-// WiFi credentials
-#define WIFI_SSID << YOUR_SSID >>
-#define WIFI_PSWD << YOUR_PASSWORD >>
+// SD Card Settings
+#define SD_CS_PIN 15
+#define SD_MOSI_PIN 23
+#define SD_MISO_PIN 19
+#define SD_SCK_PIN 18
+#define AUDIO_FOLDER "/audio"
+
+// WAV settings
+#define WAV_SAMPLE_RATE 16000
+#define WAV_BITS_PER_SAMPLE 16
+#define WAV_CHANNELS 1
+
+// API Settings
+#define MAX_AUDIO_SIZE (1024 * 1024)  // 1MB
+#define MAX_JSON_SIZE 16384
+#define GEMINI_API_URL "https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent"
 
 // sample rate for the system
 #define SAMPLE_RATE 16000
+
+// Gemini API Settings
+#define GEMINI_API_URL "https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent"
+#define MAX_AUDIO_SIZE 1024 * 1024  // 1MB maximum for audio file
+#define MAX_JSON_SIZE 16384         // 16KB for JSON responses
+
+// SD Card Settings
+#define SD_CS_PIN GPIO_NUM_15
+#define SD_MOSI_PIN GPIO_NUM_23
+#define SD_MISO_PIN GPIO_NUM_19
+#define SD_SCK_PIN GPIO_NUM_18
+#define AUDIO_FOLDER "/audios"
+
+// Audio Recording Settings
+#define WAV_SAMPLE_RATE 16000
+#define WAV_BITS_PER_SAMPLE 16
+#define WAV_CHANNELS 1
 
 // are you using an I2S microphone - comment this if you want to use an analog mic and ADC input
 // #define USE_I2S_MIC_INPUT
