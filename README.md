@@ -1,49 +1,139 @@
-# Overview
+# ESP32 Walkie-Talkie com Transcrição Automática
 
-We've made a Walkie-Talkie using the ESP32.
+Projeto de um Walkie-Talkie em ESP32 usando UDP broadcast ou ESP-NOW para a disciplina Microcontroladores do curso Ciências da Computação 7º semestre do IFCE Maracanaú.
 
-[Explanatory video](https://www.youtube.com/watch?v=d_h38X4_eQQ)
+O projeto adiciona recursos de armazenamento de áudio em cartão SD, integração com Telegram e transcrição automática via Google Gemini.
 
-[![Demo Video](https://img.youtube.com/vi/d_h38X4_eQQ/0.jpg)](https://www.youtube.com/watch?v=d_h38X4_eQQ)
+## Funcionalidades
 
-Audio data is transmitted over either UDP broadcast or ESP-NOW. So the Walkie-Talkie will even work without a WiFi network!
+- Comunicação bidirecional de áudio via ESP-NOW ou UDP broadcast
+- Armazenamento automático de áudio em cartão SD (formato WAV)
+- Integração com Telegram para envio de áudios
+- Transcrição automática dos áudios usando Google Gemini API
+- Suporte a múltiplos idiomas na transcrição
+- Interface com botão PTT (Push-to-Talk) e LEDs indicadores
+- Funciona sem necessidade de rede WiFi (no modo ESP-NOW)
 
-I'm using my own microphone board (available on Tindie: https://www.tindie.com/products/21519/) but the code will work equally well with any I2S microphone (e.g. the INMP441) and you can easily modify it to use the built-in ADC for analogue microphones.
+## Pré-requisitos
 
-For output, I'm using an I2S amplifier breakout board which I'm using the drive a 4ohm speaker. Once again, you can modify the code to use the built-in DAC for output which will let you use headphones or an analogue amplifier board.
+### Hardware
 
-I've got a great series of videos on ESP32 Audio which are a great resource for anyone who wants to learn more about audio on the ESP32 which you can find here: https://www.youtube.com/playlist?list=PL5vDt5AALlRfGVUv2x7riDMIOX34udtKD
+- 2x ESP32 DevKit ou similar
+- 2x Microfone I2S INMP441
+- 2x Amplificador de áudio (PAM8403 ou similar)
+- 2x Speaker 8Ω 0,5W
+- 2x Módulo SD Card (interface SPI)
+- 2x Botão PTT
+- LEDs e resistores para indicadores
+- Jumpers e protoboard para montagem
 
-For this project I've 3D printed a case - you can access the Fusion 360 project here: https://a360.co/2PXgAUS
+### Software
 
-I've also created a custom PCB - you can access the schematic here: https://easyeda.com/chris_9044/esp32-walkie-talkie
+- VS Code com extensão PlatformIO
+- Bibliotecas necessárias (configuradas no platformio.ini):
+  - ArduinoJson
+  - HTTPClient
+  - WiFiClientSecure
+  - Bibliotecas ESP32 nativas (WiFi, SD, SPI)
 
-The boards were manufactured by PCBWay and as always they've done a really great job. You can order the boards directly from PCBWay here: https://www.pcbway.com/project/shareproject/ESP32_Audio_Board_For_Walkie_Talkie.html
+### APIs
 
-And you can help support the channel by using my referral link: https://www.pcbway.com/setinvite.aspx?inviteid=403566 for other PCBs.
+- Bot do Telegram (token e chat_id)
+- Google Gemini API (chave de API)
 
-However, you can also easily wire this up on breadboard - that's how I prototyped it. Everything is I2S based so it's just straightforward jumper wires.
+## Configuração
 
-# Setup
+1. **Configuração das credenciais**:
+   - Crie um arquivo `credentials.h` na pasta `data/`:
 
-Everything is configured from the `src/config.h` file. To use UDP Broadcast comment out the line:
+   ```cpp
+   #pragma once
 
+   // WiFi credentials
+   #define WIFI_SSID "your-ssid"
+   #define WIFI_PSWD "your-password"
+
+   // Gemini API credentials
+   #define GEMINI_API_KEY "your-gemini-api-key"
+
+   // Telegram Bot credentials
+   #define BOT_TOKEN "your-bot-token"
+   #define CHAT_ID "your-chat-id"
+   ```
+
+2. **Configuração dos pinos**:
+   No arquivo `src/config.h`, configure os pinos de acordo com sua montagem:
+
+   ```cpp
+   // I2S Microphone Pins
+   #define I2S_MIC_SCK_PIN GPIO_NUM_18
+   #define I2S_MIC_WS_PIN  GPIO_NUM_19
+   #define I2S_MIC_SD_PIN  GPIO_NUM_21
+
+   // SD Card Pins (SPI)
+   #define SD_CS_PIN   GPIO_NUM_15
+   #define SD_MOSI_PIN GPIO_NUM_23
+   #define SD_MISO_PIN GPIO_NUM_19
+   #define SD_SCK_PIN  GPIO_NUM_18
+
+   // Push to Talk Button
+   #define GPIO_TRANSMIT_BUTTON GPIO_NUM_23
+   ```
+
+3. **Modo de comunicação**:
+   Para usar UDP Broadcast em vez de ESP-NOW, comente a linha em `config.h`:
+
+   ```cpp
+   // #define USE_ESP_NOW
+   ```
+
+## Compilação e Upload
+
+1. Abra o projeto no VS Code com PlatformIO
+2. Selecione o ambiente correto (tinypico ou lolin32)
+3. Conecte o ESP32 via USB
+4. Compile e faça upload:
+   - Use o botão "Build" para compilar
+   - Use o botão "Upload" para enviar para o ESP32
+
+## Uso
+
+1. **Comunicação básica**:
+   - Pressione e segure o botão PTT para falar
+   - Solte o botão para ouvir
+   - O LED vermelho indica transmissão
+   - O LED verde indica recepção
+
+2. **Recursos avançados**:
+   - Cada transmissão é automaticamente salva no cartão SD
+   - O áudio é enviado para o chat do Telegram configurado
+   - A transcrição é gerada e enviada como mensagem de texto
+
+## Estrutura do Projeto
+
+```plaintext
+esp32-walkie-talkie/
+├── data/
+│   └── credentials.h        # Credenciais (WiFi, API, etc)
+├── include/
+├── lib/
+│   ├── audio_input/        # Biblioteca para entrada de áudio
+│   ├── audio_output/       # Biblioteca para saída de áudio
+│   └── transport/          # Biblioteca para comunicação
+├── src/
+│   ├── Application.cpp     # Implementação principal
+│   ├── Application.h       # Definições da classe principal
+│   ├── config.cpp          # Configurações
+│   ├── config.h           # Definições de pinos e configurações
+│   └── main.cpp           # Ponto de entrada
+└── platformio.ini         # Configuração do PlatformIO
 ```
-#define USE_ESP_NOW
-```
 
-Make sure you update the WiFi SSID and Password:
+## Referências
 
-```
-// WiFi credentials
-#define WIFI_SSID << YOUR_SSID >>
-#define WIFI_PSWD << YOUR_PASSWORD >>
-```
+- [ESP32 Audio Series](https://www.youtube.com/playlist?list=PL5vDt5AALlRfGVUv2x7riDMIOX34udtKD)
+- [ESP-NOW Documentation](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/network/esp_now.html)
+- [Google Gemini API](https://ai.google.dev/gemini-api/docs?hl=pt-br)
+- [Telegram Bot API](https://core.telegram.org/bots/api)
 
-The pins for the microphone and the amplifier board are all setup in the same `config.h` file.
-
-# Building and Running
-
-I'm using PlatformIO for this project so you will need to have that installed. Open up the project and connect your ESP32. You should be able to just hit build and run.
-
-Obviously, you'll need two ESP32 boards and components to do anything :)
+- Baseado no trabalho original de [atomic14](https://github.com/atomic14/esp32-walkie-talkie)
