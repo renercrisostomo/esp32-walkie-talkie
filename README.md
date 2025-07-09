@@ -131,9 +131,4 @@ esp32-walkie-talkie/
 
 ## Referências
 
-- [ESP32 Audio Series](https://www.youtube.com/playlist?list=PL5vDt5AALlRfGVUv2x7riDMIOX34udtKD)
-- [ESP-NOW Documentation](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/network/esp_now.html)
-- [Google Gemini API](https://ai.google.dev/gemini-api/docs?hl=pt-br)
-- [Telegram Bot API](https://core.telegram.org/bots/api)
-
 - Baseado no trabalho original de [atomic14](https://github.com/atomic14/esp32-walkie-talkie)
