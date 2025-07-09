@@ -98,13 +98,13 @@ O projeto adiciona recursos de armazenamento de áudio em cartão SD, integraç�
 
 ## Uso
 
-1. **Comunicação básica**:
+1. **Comunicação**:
    - Pressione e segure o botão PTT para falar
    - Solte o botão para ouvir
    - O LED vermelho indica transmissão
    - O LED verde indica recepção
 
-2. **Recursos avançados**:
+2. **Recursos adicionais**:
    - Cada transmissão é automaticamente salva no cartão SD
    - O áudio é enviado para o chat do Telegram configurado
    - A transcrição é gerada e enviada como mensagem de texto
