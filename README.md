@@ -10,7 +10,6 @@ O projeto adiciona recursos de armazenamento de áudio em cartão SD, integraç�
 - Armazenamento automático de áudio em cartão SD (formato WAV)
 - Integração com Telegram para envio de áudios
 - Transcrição automática dos áudios usando Google Gemini API
-- Suporte a múltiplos idiomas na transcrição
 - Interface com botão PTT (Push-to-Talk) e LEDs indicadores
 - Funciona sem necessidade de rede WiFi (no modo ESP-NOW)
 
@@ -19,8 +18,8 @@ O projeto adiciona recursos de armazenamento de áudio em cartão SD, integraç�
 ### Hardware
 
 - 2x ESP32 DevKit ou similar
-- 2x Microfone I2S INMP441
-- 2x Amplificador de áudio (PAM8403 ou similar)
+- 2x Microfone I2S
+- 2x Amplificador de áudio PAM8403
 - 2x Speaker 8Ω 0,5W
 - 2x Módulo SD Card (interface SPI)
 - 2x Botão PTT
